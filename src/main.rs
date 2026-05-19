@@ -2,6 +2,13 @@ use std::io::Write;
 use std::thread;
 use std::time::{Duration, Instant};
 
+fn notify(msg: &str) {
+    std::process::Command::new("notify-send")
+        .args(["pomo", msg])
+        .spawn()
+        .ok();
+}
+
 fn print_time(d: u64, working: bool, round: u32) {
     let seconds = d % 60;
     let minutes = (d / 60) % 60;
@@ -36,7 +43,7 @@ fn main() {
             thread::sleep(Duration::from_millis(100));
         }
 
-        print!("\x07");
+        notify("Work session complete — take a break!");
         println!("\nBreak time ({break_mins}min)");
 
         let start = Instant::now();
@@ -45,7 +52,7 @@ fn main() {
             thread::sleep(Duration::from_millis(100));
         }
 
-        print!("\x07");
+        notify("Break over — back to work!");
         println!();
 
         round += 1;
